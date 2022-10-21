@@ -6,8 +6,11 @@
 # define
 EXEC_NS1_CMD="sudo ip netns exec ns1"
 EXEC_NS2_CMD="sudo ip netns exec ns2"
+NS1_MAC_ADDR='00:00:00:00:00:01'
+NS2_MAC_ADDR='00:00:00:00:00:02'
 MACSEC1_KEY='327235753878214125442A472D4B6150'
 MACSEC2_KEY='7A25432A462D4A614E645267556B586E'
+
 # configuration
 SLEEP_TIME=3
 ENCRYPT_ENABLE="on"
@@ -19,9 +22,13 @@ sudo ip netns add ns2
 # create interface
 sudo ip link add ns1-veth0 type veth peer name ns2-veth0
 
+# configure macsec to if
+sudo ip link set ns1-veth0 address ${NS1_MAC_ADDR}
+sudo ip link set ns2-veth0 address ${NS2_MAC_ADDR}
+
 # load mac address
-NS1_MAC_ADDR=$(cat /sys/class/net/ns1-veth0/address)
-NS2_MAC_ADDR=$(cat /sys/class/net/ns2-veth0/address)
+# NS1_MAC_ADDR=$(cat /sys/class/net/ns1-veth0/address)
+# NS2_MAC_ADDR=$(cat /sys/class/net/ns2-veth0/address)
 
 # connect interface to namespace
 sudo ip link set ns1-veth0 netns ns1
