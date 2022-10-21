@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# reference
+# https://costiser.ro/2016/08/01/macsec-implementation-on-linux/#google_vignette
+
 # define
 EXEC_NS1_CMD="sudo ip netns exec ns1"
 EXEC_NS2_CMD="sudo ip netns exec ns2"
 MACSEC1_KEY='327235753878214125442A472D4B6150'
 MACSEC2_KEY='7A25432A462D4A614E645267556B586E'
-SLEEP_TIME=3
 # configuration
+SLEEP_TIME=3
 ENCRYPT_ENABLE="on"
 
 # create namespace
