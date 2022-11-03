@@ -1,35 +1,40 @@
 #!/bin/bash
 # generate a private key for a curve
-openssl ecparam -name prime256v1 -genkey -noout -out ca.key
+openssl ecparam -name prime256v1 > ecdsaparam
 
 # create a self-signed certificate
-openssl req -new -x509 \
-  -key ca.key \
-  -out ca.crt \
-  -subj "/C=JP/ST=Nagoya/O=myhome/CN=localhost"
-sleep 1
+openssl req -nodes -x509 \
+  -newkey ec:ecdsaparam \
+  -keyout ca.key \
+  -subj "/C=JP/ST=Nagoya/O=myhome/CN=localhost" \
+  -days 3650 \
+  -out ca.crt
 
 # create server certificate
-openssl ecparam -name prime256v1 -genkey -noout -out server.key
-openssl req -new \
-  -key server.key \
-  -out server.csr \
-  -subj "/C=JP/ST=Nagoya/O=myhome/CN=server"
+openssl ecparam -name prime256v1 > ecdsaparam
+openssl req -nodes \
+  -newkey ec:ecdsaparam \
+  -keyout server.key \
+  -subj "/C=JP/ST=Nagoya/O=myhome/CN=server" \
+  -out server.csr
 openssl x509 -req \
   -in ./server.csr \
   -CA ca.crt \
+  -CAserial serial \
   -CAkey ca.key \
   -out server.crt
 
 # create server certificate
-openssl ecparam -name prime256v1 -genkey -noout -out client.key
-openssl req -new \
-  -key client.key \
-  -out client.csr \
-  -subj "/C=JP/ST=Nagoya/O=myhome/CN=client"
+openssl ecparam -name prime256v1 > ecdsaparam
+openssl req -nodes \
+  -newkey ec:ecdsaparam \
+  -keyout client.key \
+  -subj "/C=JP/ST=Nagoya/O=myhome/CN=client" \
+  -out client.csr
 openssl x509 -req \
   -in client.csr \
   -CA ca.crt \
+  -CAserial serial \
   -CAkey ca.key \
   -out client.crt
 
@@ -51,4 +56,4 @@ kill %2 > /dev/null 2>&1
 sleep 1
 
 #delete self certification
-sudo rm -rf ./*.csr ./*.pem ./*.crt ./*.key
+sudo rm -rf ./*.csr ./*.pem ./*.crt ./*.key ecdsaparam
