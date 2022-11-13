@@ -1,2 +1,7 @@
 *.pcap
 *.cap
+*.crt
+*.key
+*.csr
+serial
+ecdsaparam
