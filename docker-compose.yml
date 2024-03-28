@@ -1,0 +1,9 @@
+services:
+  learning_network_ws:
+    build: .
+    image: 'i_learning_network_ws'
+    container_name: 'c_learning_network_ws'
+    working_dir: '/workdir'
+    tty: true
+    volumes:
+      - ./workdir:/workdir
