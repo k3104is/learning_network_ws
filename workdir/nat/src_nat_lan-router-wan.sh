@@ -39,6 +39,8 @@ echo '/* before NAT config */'
 sudo ip netns exec router iptables -t nat -L
 
 # add src NAT rule
+sudo ip netns exec router iptables -A FORWARD -i gw-veth0 -j ACCEPT
+sudo ip netns exec router iptables -A FORWARD -o gw-veth0 -j ACCEPT
 sudo ip netns exec router iptables -t nat \
   -A POSTROUTING \
   -s 192.0.2.0/24 \
